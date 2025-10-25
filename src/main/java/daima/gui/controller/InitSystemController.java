@@ -10,11 +10,7 @@ import daima.gui.AlertFacade;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class InitSystemController extends Controller {
-  private static final Logger LOGGER = LogManager.getLogger(InitSystemController.class);
   @FXML
   private TextField fieldEmail;
   @FXML
@@ -61,7 +57,7 @@ public class InitSystemController extends Controller {
   public void registerAdmin(StaffDTO staffDTO) throws InvalidFieldException, UserDisplayableException {
     StaffDAO.getInstance().createOne(staffDTO);
     AlertFacade.showSuccessAndWait("Su cuenta de administrador ha sido registrada existosamente.");
-    AlertFacade.showSuccessAndWait("Reinicie el sistema para continuar.");
+    AlertFacade.showSuccessAndWait("Inicie sesión con sus credenciales.");
   }
 
   public void onClickRegisterAdmin() {
@@ -77,7 +73,7 @@ public class InitSystemController extends Controller {
 
       if (verifyDuplicateAccount(staffDTO.getEmail(), staffDTO.getWorkerID())) {
         registerAdmin(staffDTO);
-        navigateToLandingPage();
+        navigateFromThisPageTo("Login Page", "GUILoginPage");
       }
     } catch (InvalidFieldException | UserDisplayableException e) {
       AlertFacade.showErrorAndWait(e.getMessage());
