@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import daima.App;
 import daima.business.AuthClient;
 import daima.common.ExceptionHandler;
 import daima.gui.AlertFacade;
@@ -72,7 +73,7 @@ public abstract class Controller {
     try {
       Parent newView = FXMLLoader.load(
         Objects.requireNonNull(
-          Controller.class.getResource("/" + resourceFileName + ".fxml")
+          App.class.getResource(VIEW_ROOT_PATH + resourceFileName + ".fxml")
         )
       );
       Scene newScene = new Scene(newView);
