@@ -18,12 +18,14 @@ public class LoginController extends Controller {
   @FXML
   public PasswordField fieldPassword;
 
-  private void login(AccountDTO accountDTO, String password) {
+  private void logIn(AccountDTO accountDTO, String password) {
     if (accountDTO == null) {
       AlertFacade.showErrorAndWait("Las credenciales que ha introducido son invalidas, intente de nuevo.");
     } else if (accountDTO.hasPasswordMatch(password)) {
       AuthClient.getInstance().setCurrentUser(accountDTO);
       navigateToLandingPage();
+    } else {
+      AlertFacade.showErrorAndWait("Las credenciales que ha introducido son invalidas, intente de nuevo.");
     }
   }
 
@@ -34,7 +36,7 @@ public class LoginController extends Controller {
       String password = Validator.getValidPassword(this.fieldPassword.getText());
       AccountDTO accountDTO = new AccountDAO().findOne(email);
 
-      login(accountDTO, password);
+      logIn(accountDTO, password);
     } catch (InvalidFieldException | UserDisplayableException e) {
       AlertFacade.showErrorAndWait(e.getMessage());
     }
