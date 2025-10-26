@@ -4,12 +4,12 @@ import daima.business.rules.Validator;
 import daima.common.InvalidFieldException;
 
 public class ProgramDTO {
-  private final String name;
   private final String acronym;
+  private final String name;
 
-  public ProgramDTO(String name, String acronym) throws InvalidFieldException {
-    this.name = Validator.getValidFlexibleName(name, "program-name", 6, 64);
+  public ProgramDTO(String acronym, String name) throws InvalidFieldException {
     this.acronym = Validator.getValidAcronym(acronym);
+    this.name = Validator.getValidFlexibleName(name, "program-name", 6, 64);
   }
 
   public String getAcronym() {

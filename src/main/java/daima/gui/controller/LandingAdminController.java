@@ -22,4 +22,15 @@ public class LandingAdminController extends LandingController {
   public void onClickRegisterTutored() {
 
   }
+
+  public void onClickReviewProgramList() {
+
+  }
+
+  public void onClickRegisterProgram() {
+    ModalFacade.createAndDisplay(
+      new ModalFacadeConfiguration("Registrar Programa", "GUIRegisterProgramModal"
+      )
+    );
+  }
 }
