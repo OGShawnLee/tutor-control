@@ -8,6 +8,7 @@ public class Validator {
   private static final String NAME_REGEX_SPANISH = "^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\\s]+$";
   private static final String WORKER_ID_REGEX = "^(?!0+$)[0-9]{1,5}$";
   private static final String FLEXIBLE_NAME_REGEX = "^[A-Za-zÑñÁáÉéÍíÓóÚúÜü0-9\\s\\-_/.:]+$";
+  private static final String ACRONYM_REGEX = "^[A-Z]{2,6}$";
 
   private static boolean isValidEmail(String email) {
     return isValidString(email) && email.trim().matches(EMAIL_REGEX);
@@ -28,6 +29,14 @@ public class Validator {
 
     String trimmedString = value.trim();
     return trimmedString.length() >= minLength && trimmedString.length() <= maxLength;
+  }
+
+  public static String getValidAcronym(String value) throws InvalidFieldException {
+    if (isValidString(value) && value.trim().matches(ACRONYM_REGEX)) {
+      return value.trim();
+    }
+
+    throw new InvalidFieldException("Acrónimo debe ser una cadena de texto de 2 a 6 letras mayúsculas.", "acronym");
   }
 
   public static String getValidEmail(String value) throws InvalidFieldException {

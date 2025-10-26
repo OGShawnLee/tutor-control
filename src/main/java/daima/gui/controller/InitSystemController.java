@@ -62,14 +62,14 @@ public class InitSystemController extends Controller {
 
   public void onClickRegisterAdmin() {
     try {
-      StaffDTO staffDTO = new StaffDTO(
-        this.fieldEmail.getText(),
-        this.fieldWorkerID.getText(),
-        this.fieldName.getText(),
-        this.fieldPaternalLastName.getText(),
-        this.fieldMaternalLastName.getText(),
-        AccountRole.ADMIN
-      );
+      StaffDTO staffDTO = new StaffDTO.Builder()
+        .setEmail(fieldEmail.getText())
+        .setWorkerID(fieldWorkerID.getText())
+        .setName(fieldName.getText())
+        .setPaternalLastName(fieldPaternalLastName.getText())
+        .setMaternalLastName(fieldMaternalLastName.getText())
+        .setRole(AccountRole.ADMIN)
+        .build();
 
       if (verifyDuplicateAccount(staffDTO.getEmail(), staffDTO.getWorkerID())) {
         registerAdmin(staffDTO);

@@ -1,6 +1,5 @@
 package daima.business.dao;
 
-import daima.business.dto.AccountDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,9 +22,10 @@ public class StaffDAO extends DAOShape<StaffDTO> {
   private static final Logger LOGGER = LogManager.getLogger(StaffDAO.class);
   private static final String CREATE_ONE_QUERY
     = "INSERT INTO Staff (email, staff_id, name, paternal_last_name, maternal_last_name, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  private static final String CREATE_ONE_COORDINATOR_QUERY =
+    "CALL create_coordinator(?, ?, ?, ?, ?, ?, ?, ?)";
   private static final String GET_ONE_QUERY = "SELECT * FROM Staff WHERE email = ?";
   private static final String GET_ONE_BY_WORKER_ID = "SELECT * FROM Staff WHERE staff_id = ?";
-
   private static final StaffDAO instance = new StaffDAO();
 
   public static StaffDAO getInstance() {
@@ -34,17 +34,17 @@ public class StaffDAO extends DAOShape<StaffDTO> {
 
   @Override
   public StaffDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws InvalidFieldException, SQLException {
-    return new StaffDTO(
-      resultSet.getString("email"),
-      resultSet.getString("staff_id"),
-      resultSet.getString("name"),
-      resultSet.getString("paternal_last_name"),
-      resultSet.getString("maternal_last_name"),
-      AccountRole.valueOf(resultSet.getString("role"))
-    );
+    return new StaffDTO.Builder()
+      .setEmail(resultSet.getString("email"))
+      .setWorkerID(resultSet.getString("staff_id"))
+      .setName(resultSet.getString("name"))
+      .setPaternalLastName(resultSet.getString("paternal_last_name"))
+      .setMaternalLastName(resultSet.getString("maternal_last_name"))
+      .setRole(AccountRole.valueOf(resultSet.getString("role")))
+      .build();
   }
 
-  public void createOne(StaffDTO staffDTO) throws InvalidFieldException, UserDisplayableException {
+  public void createOne(StaffDTO staffDTO) throws UserDisplayableException {
     try (
       Connection connection = DBConnector.getInstance().getConnection(); CallableStatement statement = connection.prepareCall(CREATE_ONE_QUERY)) {
       statement.setString(1, staffDTO.getEmail());
@@ -53,7 +53,7 @@ public class StaffDAO extends DAOShape<StaffDTO> {
       statement.setString(4, staffDTO.getPaternalLastName());
       statement.setString(5, staffDTO.getMaternalLastName());
       statement.setString(6, StaffDAO.createHashedPassword(staffDTO.getWorkerID()));
-      statement.setString(7, AccountRole.ADMIN.toDBString());
+      statement.setString(7, staffDTO.getRole().toDBString());
       statement.executeUpdate();
     } catch (SQLException e) {
       throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el personal académico.");
