@@ -42,6 +42,15 @@ public class AlertFacade {
     ).showAndWait();
   }
 
+  public static void showWarningAndWait(String message) {
+    new AlertFacade(
+      Alert.AlertType.WARNING,
+      "Advertencia",
+      "Advertencia del Sistema",
+      message
+    ).showAndWait();
+  }
+
   public static void showInformationAndWait(String message) {
     new AlertFacade(
       Alert.AlertType.INFORMATION,

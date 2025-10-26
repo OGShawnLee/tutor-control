@@ -5,13 +5,12 @@ import daima.gui.modal.ModalFacadeConfiguration;
 
 public class LandingAdminController extends LandingController {
   public void onClickReviewStaffList() {
-
+    ReviewStaffListController.navigateToAcademicListPage(getScene());
   }
 
   public void onClickRegisterStaff() {
     ModalFacade.createAndDisplay(
-      new ModalFacadeConfiguration("Registrar Personal", "GUIRegisterStaffModal"
-      )
+      new ModalFacadeConfiguration("Registrar Personal", "GUIRegisterStaffModal")
     );
   }
 
@@ -29,8 +28,7 @@ public class LandingAdminController extends LandingController {
 
   public void onClickRegisterProgram() {
     ModalFacade.createAndDisplay(
-      new ModalFacadeConfiguration("Registrar Programa", "GUIRegisterProgramModal"
-      )
+      new ModalFacadeConfiguration("Registrar Programa", "GUIRegisterProgramModal")
     );
   }
 }

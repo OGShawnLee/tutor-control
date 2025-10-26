@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -24,6 +25,7 @@ public class StaffDAO extends DAOShape<StaffDTO> {
     = "INSERT INTO Staff (email, staff_id, name, paternal_last_name, maternal_last_name, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
   private static final String CREATE_ONE_COORDINATOR_QUERY =
     "CALL create_coordinator(?, ?, ?, ?, ?, ?, ?, ?)";
+  private static final String GET_ALL_QUERY = "SELECT * FROM Staff";
   private static final String GET_ONE_QUERY = "SELECT * FROM Staff WHERE email = ?";
   private static final String GET_ONE_BY_WORKER_ID = "SELECT * FROM Staff WHERE staff_id = ?";
   private static final StaffDAO instance = new StaffDAO();
@@ -41,6 +43,7 @@ public class StaffDAO extends DAOShape<StaffDTO> {
       .setPaternalLastName(resultSet.getString("paternal_last_name"))
       .setMaternalLastName(resultSet.getString("maternal_last_name"))
       .setRole(AccountRole.valueOf(resultSet.getString("role")))
+      .setCreatedAt(resultSet.getTimestamp("created_at").toLocalDateTime())
       .build();
   }
 
@@ -85,6 +88,26 @@ public class StaffDAO extends DAOShape<StaffDTO> {
     }
 
     return staffDTO;
+  }
+
+  public ArrayList<StaffDTO> getAll() throws UserDisplayableException {
+    ArrayList<StaffDTO> staffList = new ArrayList<>();
+
+    try (
+      Connection connection = DBConnector.getInstance().getConnection();
+      PreparedStatement statement = connection.prepareStatement(GET_ALL_QUERY);
+      ResultSet resultSet = statement.executeQuery()
+    ) {
+      while (resultSet.next()) {
+        staffList.add(createDTOInstanceFromResultSet(resultSet));
+      }
+
+      return staffList;
+    } catch (SQLException e) {
+      throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible cargar el personal académico.");
+    } catch (InvalidFieldException e) {
+      throw ExceptionHandler.handleCorruptedDataException(LOGGER, e);
+    }
   }
 
   public StaffDTO findOneByWorkerID(String workerID) throws InvalidFieldException, UserDisplayableException {

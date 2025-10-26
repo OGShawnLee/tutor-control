@@ -20,6 +20,17 @@ public class ExceptionHandler {
   private static final String SQL_UNKNOWN_ERROR = "Error desconocido al procesar la solicitud. Por favor, inténtelo más tarde.";
 
   /**
+   * Handles InvalidFieldException indicating corrupted data retrieved from the database and returns a user-friendly message.
+   * @param logger the logger to log the error
+   * @param e the InvalidFieldException to handle
+   * @return UserDisplayableException with a user-friendly message
+   */
+  public static UserDisplayableException handleCorruptedDataException(Logger logger, InvalidFieldException e) {
+    logger.fatal("Datos Corruptos Detectados: {}", e.getMessage(), e);
+    return new UserDisplayableException("No ha sido posible recuperar información debido a un error en la base de datos, intente de nuevo más tarde", e);
+  }
+
+  /**
    * Handles an unexpected exception and returns a user-friendly message.
    * Should be used as a last resort when no other specific exception handling is applicable.
    * @param logger the logger to log the error

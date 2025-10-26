@@ -4,14 +4,16 @@ import daima.business.dto.enumeration.AccountRole;
 import daima.business.rules.Validator;
 import daima.common.InvalidFieldException;
 
-public class StaffDTO {
+import java.time.LocalDateTime;
+
+public class StaffDTO implements Record {
   private String email;
   private String workerID;
   private String name;
   private String paternalLastName;
   private String maternalLastName;
   private AccountRole role;
-  private String programAcronym;
+  private LocalDateTime createdAt;
 
   StaffDTO(Builder builder) throws InvalidFieldException {
     this.email = Validator.getValidEmail(builder.email);
@@ -34,6 +36,7 @@ public class StaffDTO {
     }
 
     this.role = builder.role;
+    this.createdAt = builder.createdAt;
   }
 
   public String getEmail() {
@@ -56,12 +59,30 @@ public class StaffDTO {
     return maternalLastName;
   }
 
+  public String getFullName() {
+    if (maternalLastName == null || maternalLastName.isEmpty()) {
+      return String.format(
+        "%s %s",
+        name,
+        paternalLastName
+      );
+    } else {
+      return String.format(
+        "%s %s %s",
+        name,
+        paternalLastName,
+        maternalLastName
+      );
+    }
+  }
+
   public AccountRole getRole() {
     return role;
   }
 
-  public String getProgramAcronym() {
-    return programAcronym;
+  @Override
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
   }
 
   public static class Builder {
@@ -71,6 +92,7 @@ public class StaffDTO {
     private String paternalLastName;
     private String maternalLastName;
     private AccountRole role;
+    private LocalDateTime createdAt;
 
     public Builder setEmail(String email) throws InvalidFieldException {
       this.email = Validator.getValidEmail(email);
@@ -111,6 +133,11 @@ public class StaffDTO {
 
     public Builder setRole(AccountRole role) {
       this.role = role;
+      return this;
+    }
+
+    public Builder setCreatedAt(LocalDateTime createdAt) {
+      this.createdAt = createdAt;
       return this;
     }
 
