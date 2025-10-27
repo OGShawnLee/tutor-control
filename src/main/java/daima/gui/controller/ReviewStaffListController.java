@@ -8,7 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import daima.business.dao.StaffDAO;
-import daima.business.dto.StaffDTO;
+import daima.business.dto.person.StaffDTO;
 import daima.common.UserDisplayableException;
 import daima.gui.AlertFacade;
 import daima.gui.modal.ModalFacade;

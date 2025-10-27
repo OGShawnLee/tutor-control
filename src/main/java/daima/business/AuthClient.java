@@ -1,12 +1,7 @@
 package daima.business;
 
-import daima.business.dao.StaffDAO;
-import daima.business.dto.StaffDTO;
 import daima.business.dto.AccountDTO;
-import daima.business.dto.enumeration.AccountRole;
 import daima.common.UserDisplayableException;
-
-import java.sql.SQLException;
 
 /*
   * AuthClient is a singleton class that manages the authentication state of the application.

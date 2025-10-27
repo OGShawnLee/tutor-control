@@ -19,7 +19,9 @@ public class LandingAdminController extends LandingController {
   }
 
   public void onClickRegisterTutored() {
-
+    ModalFacade.createAndDisplay(
+      new ModalFacadeConfiguration("Registrar Tutorados", "GUIRegisterTutoredModal")
+    );
   }
 
   public void onClickReviewProgramList() {

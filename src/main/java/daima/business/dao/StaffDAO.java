@@ -3,7 +3,7 @@ package daima.business.dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import daima.business.dto.StaffDTO;
+import daima.business.dto.person.StaffDTO;
 import daima.business.dto.enumeration.AccountRole;
 import daima.common.ExceptionHandler;
 import daima.common.InvalidFieldException;

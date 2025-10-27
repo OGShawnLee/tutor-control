@@ -1,7 +1,7 @@
 package daima.gui.controller;
 
 import daima.business.dao.StaffDAO;
-import daima.business.dto.StaffDTO;
+import daima.business.dto.person.StaffDTO;
 import daima.business.dto.enumeration.AccountRole;
 import daima.common.InvalidFieldException;
 import daima.common.UserDisplayableException;

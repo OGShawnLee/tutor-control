@@ -1,7 +1,7 @@
 package daima.gui.controller;
 
 import daima.business.dao.StaffDAO;
-import daima.business.dto.StaffDTO;
+import daima.business.dto.person.StaffDTO;
 import daima.business.dto.enumeration.AccountRole;
 import daima.common.InvalidFieldException;
 import daima.common.UserDisplayableException;
@@ -34,7 +34,7 @@ public class RegisterStaffController extends Controller {
     fieldRole.setValue(AccountRole.TUTOR);
   }
 
-  public boolean verifyDuplicateAccount(String email, String workerID) throws InvalidFieldException, UserDisplayableException {
+  public boolean verifyDuplicateStaff(String email, String workerID) throws InvalidFieldException, UserDisplayableException {
     StaffDTO existingStaffDTO = StaffDAO.getInstance().findOne(email);
 
     if (existingStaffDTO != null) {
@@ -68,7 +68,7 @@ public class RegisterStaffController extends Controller {
         .setRole(this.fieldRole.getValue())
         .build();
 
-      if (verifyDuplicateAccount(staffDTO.getEmail(), staffDTO.getWorkerID())) {
+      if (verifyDuplicateStaff(staffDTO.getEmail(), staffDTO.getWorkerID())) {
         registerStaff(staffDTO);
       }
     } catch (InvalidFieldException | UserDisplayableException e) {
