@@ -17,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 public class TutoredDAO extends DAOShape<TutoredDTO> {
   private static final Logger LOGGER = LogManager.getLogger(TutoredDAO.class);
   private static final String CREATE_ONE_QUERY

@@ -1,5 +1,6 @@
 package daima.gui.modal;
 
+import daima.gui.controller.ContextController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import daima.common.ExceptionHandler;
@@ -36,6 +37,44 @@ public class ModalFacade {
     try {
       ModalFacade modalFacade = new ModalFacade(configuration);
       modalFacade.display();
+    } catch (IOException e) {
+      AlertFacade.showErrorAndWait(
+        ExceptionHandler.handleGUILoadIOException(LOGGER, e).getMessage()
+      );
+    }
+  }
+
+  /**
+   * Displays a modal with a specific context.
+   *
+   * @param context the context to be passed to the controller
+   * @param <T>     the type of the context
+   */
+  private <T> void displayContextModal(T context) {
+    Modal modal = getModal();
+    ContextController<T> controller = modal.getController();
+    controller.setContext(context);
+    modal.showAndWait();
+  }
+
+  /**
+   * Creates and displays a modal with a specific context.
+   * This method is useful for scenarios where the modal needs to operate with a specific context,
+   * such as when working on a database record.
+   * <p>
+   * It initializes the controller with the provided context and displays the modal.
+   * This method is generic and can be used with any type of context.
+   * It offers a convenient way to create and display modals without needing to
+   * manually set up the controller and modal each time.
+   *
+   * @param configuration the configuration for the modal
+   * @param context       the context to be passed to the controller
+   * @param <T>           the type of the context
+   */
+  public static <T> void createAndDisplayContextModal(ModalFacadeConfiguration configuration, T context) {
+    try {
+      ModalFacade modalFacade = new ModalFacade(configuration);
+      modalFacade.displayContextModal(context);
     } catch (IOException e) {
       AlertFacade.showErrorAndWait(
         ExceptionHandler.handleGUILoadIOException(LOGGER, e).getMessage()

@@ -1,5 +1,6 @@
 package daima.business.dao;
 
+import daima.business.dto.ProgramDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,9 +23,9 @@ import org.mindrot.jbcrypt.BCrypt;
 public class StaffDAO extends DAOShape<StaffDTO> {
   private static final Logger LOGGER = LogManager.getLogger(StaffDAO.class);
   private static final String CREATE_ONE_QUERY
-    = "INSERT INTO Staff (email, staff_id, name, paternal_last_name, maternal_last_name, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
-  private static final String CREATE_ONE_COORDINATOR_QUERY =
-    "CALL create_coordinator(?, ?, ?, ?, ?, ?, ?, ?)";
+    = "INSERT INTO Staff (email, worker_id, name, paternal_last_name, maternal_last_name, password) VALUES (?, ?, ?, ?, ?, ?)";
+  private static final String CREATE_ONE_COORDINATES_QUERY = "INSERT INTO Coordinates (staff_id, program_acronym) VALUES (?, ?)";
+  private static final String CREATE_ONE_TUTORS_QUERY = "INSERT INTO Tutors (staff_id, program_acronym) VALUES (?, ?)";
   private static final String GET_ALL_QUERY = "SELECT * FROM Staff";
   private static final String GET_ONE_QUERY = "SELECT * FROM Staff WHERE email = ?";
   private static final String GET_ONE_BY_WORKER_ID = "SELECT * FROM Staff WHERE staff_id = ?";
@@ -47,25 +48,77 @@ public class StaffDAO extends DAOShape<StaffDTO> {
       .build();
   }
 
+  private void configureCreateStatement(PreparedStatement statement, StaffDTO staffDTO) throws SQLException {
+    statement.setString(1, staffDTO.getEmail());
+    statement.setString(2, staffDTO.getWorkerID());
+    statement.setString(3, staffDTO.getName());
+    statement.setString(4, staffDTO.getPaternalLastName());
+    statement.setString(5, staffDTO.getMaternalLastName());
+    statement.setString(6, StaffDAO.createHashedPassword(staffDTO.getWorkerID()));
+    statement.setString(7, staffDTO.getRole().toDBString());
+  }
+
   public void createOne(StaffDTO staffDTO) throws UserDisplayableException {
     try (
-      Connection connection = DBConnector.getInstance().getConnection(); CallableStatement statement = connection.prepareCall(CREATE_ONE_QUERY)) {
-      statement.setString(1, staffDTO.getEmail());
-      statement.setString(2, staffDTO.getWorkerID());
-      statement.setString(3, staffDTO.getName());
-      statement.setString(4, staffDTO.getPaternalLastName());
-      statement.setString(5, staffDTO.getMaternalLastName());
-      statement.setString(6, StaffDAO.createHashedPassword(staffDTO.getWorkerID()));
-      statement.setString(7, staffDTO.getRole().toDBString());
+      Connection connection = DBConnector.getInstance().getConnection();
+      CallableStatement statement = connection.prepareCall(CREATE_ONE_QUERY)
+    ) {
+      configureCreateStatement(statement, staffDTO);
       statement.executeUpdate();
     } catch (SQLException e) {
       throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el personal académico.");
     }
   }
 
+  public void createOneCoordinator(StaffDTO staffDTO, ProgramDTO programDTO) throws UserDisplayableException {
+    try (
+      Connection connection = DBConnector.getInstance().getConnection();
+      PreparedStatement createStatement = connection.prepareStatement(CREATE_ONE_QUERY);
+      PreparedStatement assignProgramStatement = connection.prepareStatement(CREATE_ONE_COORDINATES_QUERY)
+    ) {
+      connection.setAutoCommit(false);
+
+      configureCreateStatement(createStatement, staffDTO);
+      createStatement.executeUpdate();
+
+      assignProgramStatement.setString(1, staffDTO.getWorkerID());
+      assignProgramStatement.setString(2, programDTO.getAcronym());
+      assignProgramStatement.executeUpdate();
+
+      connection.commit();
+    } catch (SQLException e) {
+      throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el coordinador.");
+    }
+  }
+
+  public void createOneTutor(StaffDTO staffDTO, ArrayList<ProgramDTO> programDTOList) throws UserDisplayableException {
+    try (
+      Connection connection = DBConnector.getInstance().getConnection();
+      PreparedStatement createStatement = connection.prepareStatement(CREATE_ONE_QUERY);
+      PreparedStatement assignProgramStatement = connection.prepareStatement(CREATE_ONE_TUTORS_QUERY)
+    ) {
+      connection.setAutoCommit(false);
+
+      configureCreateStatement(createStatement, staffDTO);
+      createStatement.executeUpdate();
+
+      for (ProgramDTO programDTO : programDTOList) {
+        assignProgramStatement.setString(1, staffDTO.getWorkerID());
+        assignProgramStatement.setString(2, programDTO.getAcronym());
+        assignProgramStatement.executeUpdate();
+      }
+
+      connection.commit();
+    } catch (SQLException e) {
+      throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible crear el tutor.");
+    }
+  }
+
   public StaffDTO findOne(String email) throws InvalidFieldException, UserDisplayableException {
     try (
-      Connection connection = DBConnector.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(GET_ONE_QUERY)) {
+      Connection connection = DBConnector.getInstance().getConnection();
+      PreparedStatement statement = connection.prepareStatement(GET_ONE_QUERY)
+    ) {
       statement.setString(1, email);
 
       try (ResultSet resultSet = statement.executeQuery()) {

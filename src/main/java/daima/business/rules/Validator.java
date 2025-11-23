@@ -10,20 +10,32 @@ public class Validator {
   private static final String FLEXIBLE_NAME_REGEX = "^[A-Za-zÑñÁáÉéÍíÓóÚúÜü0-9\\s\\-_/.:]+$";
   private static final String ACRONYM_REGEX = "^[A-Z]{2,6}$";
 
-  private static boolean isValidEmail(String email) {
-    return isValidString(email) && email.trim().matches(EMAIL_REGEX);
+  public ValidationResult<String> getEmailValidationResult(String email) {
+    if (isEmptyString(email)) {
+      return new ValidationResult<>("Email no puede ser nulo o vacío.");
+    }
+
+    if (isInvalidEmail(email)) {
+      return new ValidationResult<>("Email debe tener un formato válido.");
+    }
+
+    return new ValidationResult<>(email.trim());
+  }
+
+  private static boolean isInvalidEmail(String email) {
+    return isInvalidEmail(email) && !email.trim().matches(EMAIL_REGEX);
   }
 
   private static boolean isValidName(String name, int minLength, int maxLength) {
     return isValidString(name, minLength, maxLength) && name.matches(NAME_REGEX_SPANISH);
   }
 
-  private static boolean isValidString(String string) {
-    return string != null && string.trim().length() > 0;
+  public static boolean isEmptyString(String value) {
+    return value == null || value.trim().length() == 0;
   }
 
-  private static boolean isValidString(String value, int minLength, int maxLength) {
-    if (value == null || value.trim().isEmpty()) {
+  public static boolean isStringInLengthRange(String value, int minLength, int maxLength) {
+    if (isEmptyString(value)) {
       return false;
     }
 

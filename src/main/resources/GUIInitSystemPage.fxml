@@ -8,51 +8,55 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="daima.gui.controller.InitSystemController">
+<AnchorPane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="1280.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="daima.gui.controller.InitSystemController">
   <children>
     <VBox layoutX="460.0" layoutY="184.0" prefWidth="360.0" spacing="16.0">
       <children>
         <Label fx:id="heading" styleClass="title" text="Registrar Primer Administrador">
           <VBox.margin>
-            <Insets />
+            <Insets/>
           </VBox.margin>
           <padding>
-            <Insets bottom="8.0" />
+            <Insets bottom="8.0"/>
           </padding>
         </Label>
         <VBox spacing="8.0">
           <children>
-            <Label styleClass="label" text="Correo Electrónico" />
-            <TextField fx:id="fieldEmail" promptText="Introduzca el Correo Electrónico del Académico" styleClass="input" />
+            <Label styleClass="label" text="Correo Electrónico"/>
+            <TextField fx:id="fieldEmail" promptText="Introduzca el Correo Electrónico del Académico"
+                       styleClass="input"/>
           </children>
         </VBox>
         <VBox spacing="8.0">
           <children>
-            <Label styleClass="label" text="ID de Trabajador" />
-            <TextField fx:id="fieldWorkerID" promptText="Introduzca la ID de Trabajador" styleClass="input" />
+            <Label styleClass="label" text="ID de Trabajador"/>
+            <TextField fx:id="fieldWorkerID" promptText="Introduzca la ID de Trabajador" styleClass="input"/>
           </children>
         </VBox>
         <VBox spacing="8.0">
           <children>
-            <Label styleClass="label" text="Nombre" />
-            <TextField fx:id="fieldName" promptText="Introduzca el Nombre" styleClass="input" />
+            <Label styleClass="label" text="Nombre"/>
+            <TextField fx:id="fieldName" promptText="Introduzca el Nombre" styleClass="input"/>
           </children>
         </VBox>
         <VBox spacing="8.0">
           <children>
-            <Label styleClass="label" text="Apellido Paterno" />
-            <TextField fx:id="fieldPaternalLastName" promptText="Introduzca el Apellido Paterno" styleClass="input" />
+            <Label styleClass="label" text="Apellido Paterno"/>
+            <TextField fx:id="fieldPaternalLastName" promptText="Introduzca el Apellido Paterno" styleClass="input"/>
           </children>
         </VBox>
         <VBox spacing="8.0">
           <children>
-            <Label styleClass="label" text="Apellido Materno" />
-            <TextField fx:id="fieldMaternalLastName" promptText="Introduzca el Apellido Materno" styleClass="input" />
+            <Label styleClass="label" text="Apellido Materno"/>
+            <TextField fx:id="fieldMaternalLastName" promptText="Introduzca el Apellido Materno" styleClass="input"/>
           </children>
         </VBox>
         <HBox>
           <children>
-            <Button fx:id="buttonSubmit" mnemonicParsing="false" onAction="#onClickRegisterAdmin" prefWidth="360.0" styleClass="button" text="Confirmar" />
+            <Button fx:id="buttonSubmit" mnemonicParsing="false" onAction="#onClickRegisterAdmin" prefWidth="360.0"
+                    styleClass="button" text="Confirmar"/>
           </children>
         </HBox>
       </children>

@@ -6,11 +6,13 @@ import daima.common.InvalidFieldException;
 public class TutoredDTO extends Person {
   private final String enrollmentID;
   private final String programAcronym;
+  private final String tutorID;
 
   TutoredDTO(Builder builder) throws InvalidFieldException {
     super(builder);
     this.enrollmentID = builder.enrollmentID;
     this.programAcronym = builder.programAcronym;
+    this.tutorID = builder.tutorID;
   }
 
   public String getEnrollmentID() {
@@ -21,9 +23,14 @@ public class TutoredDTO extends Person {
     return programAcronym;
   }
 
+  public String getTutorID() {
+    return tutorID;
+  }
+
   public static class Builder extends PersonBuilder<Builder> {
     private String enrollmentID;
     private String programAcronym;
+    private String tutorID;
 
     public Builder setEnrollmentID(String enrollmentID) throws InvalidFieldException {
       this.enrollmentID = Validator.getValidEnrollment(enrollmentID);
@@ -42,6 +49,11 @@ public class TutoredDTO extends Person {
 
     public Builder setProgramAcronym(String programAcronym) throws InvalidFieldException {
       this.programAcronym = Validator.getValidAcronym(programAcronym);
+      return this;
+    }
+
+    public Builder setTutorID(String tutorID) throws InvalidFieldException {
+      this.tutorID = tutorID != null ? Validator.getValidEmail(tutorID) : null;
       return this;
     }
 

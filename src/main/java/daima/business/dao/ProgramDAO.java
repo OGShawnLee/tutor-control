@@ -14,16 +14,20 @@ import java.util.ArrayList;
 
 public class ProgramDAO extends DAOShape<ProgramDTO> {
   private static final String CREATE_ONE_QUERY = "INSERT INTO Program (acronym, name) VALUES (?, ?)";
-  private static final String FIND_ONE_QUERY = "SELECT * FROM Program WHERE acronym = ?";
-  private static final String GET_ALL_QUERY = "SELECT * FROM Program";
+  private static final String FIND_ONE_QUERY = "SELECT * FROM CompleteProgram WHERE acronym = ?";
+  private static final String GET_ALL_QUERY = "SELECT * FROM CompleteProgram";
+  private static final String UPDATE_ONE_QUERY = "UPDATE Program SET name = ? WHERE acronym = ?";
   private static final ProgramDAO instance = new ProgramDAO();
 
   @Override
   public ProgramDTO getDTOInstanceFromResultSet(ResultSet resultSet) throws SQLException, InvalidFieldException {
-    return new ProgramDTO(
+    ProgramDTO programDTO = new ProgramDTO(
       resultSet.getString("acronym"),
       resultSet.getString("name")
     );
+    programDTO.setCoordinatorFullName(resultSet.getString("coordinator_full_name"));
+    programDTO.setCoordinatorEmail(resultSet.getString("coordinator_email"));
+    return programDTO;
   }
 
   public static ProgramDAO getInstance() {
@@ -78,6 +82,20 @@ public class ProgramDAO extends DAOShape<ProgramDTO> {
       return list;
     } catch (SQLException e) {
       throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible obtener la lista de programas.");
+    }
+  }
+
+  public void updateOne(ProgramDTO programDTO) throws UserDisplayableException {
+    try (
+      Connection connection = DBConnector.getInstance().getConnection();
+      PreparedStatement statement = connection.prepareStatement(UPDATE_ONE_QUERY)
+    ) {
+      statement.setString(1, programDTO.getName());
+      statement.setString(2, programDTO.getAcronym());
+
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      throw ExceptionHandler.handleSQLException(LOGGER, e, "No ha sido posible actualizar el programa.");
     }
   }
 }

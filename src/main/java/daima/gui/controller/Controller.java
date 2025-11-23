@@ -1,5 +1,6 @@
 package daima.gui.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -85,5 +86,12 @@ public abstract class Controller {
         ExceptionHandler.handleGUILoadIOException(CONTROLLER_LOGGER, e).getMessage()
       );
     }
+  }
+
+  /**
+   * Closes the current window.
+   */
+  protected void close() {
+    Platform.runLater(() -> getScene().close());
   }
 }
